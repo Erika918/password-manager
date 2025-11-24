@@ -1,14 +1,13 @@
-const CACHE_NAME = 'cofre-v1';
-const OFFLINE_URL = '/offline.html';
+const CACHE_NAME = 'cofre-v2';
+
 const PRECACHE_ASSETS = [
-  '/',            // cache root / index
-  '/index.html',
-  '/style.css',
-  '/script.js',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  OFFLINE_URL
+  './',
+  './index.html',
+  './style.css',
+  './script.js',
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
 self.addEventListener('install', event => {
@@ -30,22 +29,18 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  // Strategy: try network, fallback to cache, then offline page
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Atualiza cache com a resposta da rede
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, responseClone);
-        });
-        return response;
-      })
-      .catch(() =>
-        caches.match(event.request)
-          .then(cached => cached || caches.match(OFFLINE_URL))
+    caches.match(event.request)
+      .then(cached => cached ||
+        fetch(event.request).then(response => {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
+          return response;
+        })
       )
   );
 });
