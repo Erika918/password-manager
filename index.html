@@ -3,42 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <title>Cofre de Senhas - Erika</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- Responsivo -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Cor do aplicativo PWA -->
   <meta name="theme-color" content="#4a00e0">
-  <link rel="manifest" href="/manifest.json">
-  <link rel="icon" href="icons/icon-192.png">
-  <link rel="stylesheet" href="style.css">
+
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="./manifest.json">
+
+  <!-- Ícone -->
+  <link rel="icon" href="./icons/icon-192.png">
+
+  <!-- CSS externo -->
+  <link rel="stylesheet" href="./style.css">
+
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
     h1 { text-align: center; }
-    #lock-screen { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f5f5f5; }
-    .login-box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); text-align: center; }
-    .login-box input { padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%; }
-    .login-box button { margin-top: 10px; padding: 10px; background: #4a00e0; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
+
+    #lock-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f5f5f5;
+    }
+
+    .login-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 280px;
+    }
+
+    .login-box input {
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    .login-box button {
+      margin-top: 10px;
+      padding: 10px;
+      background: #4a00e0;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+
     #app { display: none; }
   </style>
 </head>
+
 <body>
+
+  <!-- Tela bloqueada -->
   <div id="lock-screen">
     <div class="login-box">
       <h2>🔑 Digite o PIN</h2>
-      <input type="password" id="pin" placeholder="PIN de acesso">
+
+      <input 
+        type="password" 
+        id="pin" 
+        placeholder="PIN de acesso"
+        inputmode="numeric"
+      >
+
       <button onclick="checkPin()">Entrar</button>
+
       <p id="error" style="color:red;"></p>
     </div>
   </div>
 
+  <!-- App -->
   <div id="app">
-    <h1> 🔐 Central de Acessos</h1>
+    <h1>🔐 Central de Acessos</h1>
+
     <input type="text" id="search" placeholder="Buscar site...">
+
     <div id="password-list"></div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Scripts externos -->
+  <script src="./script.js"></script>
 
   <script>
-    // PIN (atenção: inseguro em produção)
+    // PIN (somente para uso pessoal)
     const CORRECT_PIN = "1209";
+
     function checkPin() {
       const inputPin = document.getElementById("pin").value;
       if (inputPin === CORRECT_PIN) {
@@ -50,21 +116,22 @@
     }
 
     // Registrar Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(reg => console.log('SW registrado:', reg.scope))
-          .catch(err => console.warn('SW falhou:', err));
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js")
+          .then(reg => console.log("SW registrado:", reg.scope))
+          .catch(err => console.warn("SW falhou:", err));
       });
     }
 
-    // Exibir prompt de instalação (opcional)
+    // Instalação PWA
     let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
+
+    window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      // você pode mostrar um botão "Instalar" e chamar deferredPrompt.prompt()
-      // ex: document.getElementById('installBtn').style.display = 'block';
+      // Exemplo: exibir botão de instalar
+      // document.getElementById('installBtn').style.display = 'block';
     });
   </script>
 </body>
